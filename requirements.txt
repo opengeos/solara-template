@@ -1,3 +1,4 @@
 leafmap
-solara==1.17.0
+solara
 geopandas
+pydantic< 2.0 
