@@ -1,6 +1,5 @@
 import leafmap
 import solara
-from leafmap.toolbar import change_basemap
 
 zoom = solara.reactive(2)
 center = solara.reactive((20, 0))
