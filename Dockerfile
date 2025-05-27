@@ -1,8 +1,4 @@
-FROM jupyter/base-notebook:latest
-
-RUN mamba install -c conda-forge leafmap geopandas localtileserver -y && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+FROM quay.io/jupyter/base-notebook:latest
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
@@ -10,12 +6,11 @@ RUN pip install -r requirements.txt
 RUN mkdir ./pages
 COPY /pages ./pages
 
-ENV PROJ_LIB='/opt/conda/share/proj'
+WORKDIR /home/jovyan
+USER jovyan
 
-USER root
-RUN chown -R ${NB_UID} ${HOME}
-USER ${NB_USER}
+EXPOSE 7860
 
-EXPOSE 8765
+HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health
 
-CMD ["solara", "run", "./pages", "--host=0.0.0.0"]
+ENTRYPOINT ["solara", "run", "./pages", "--host=0.0.0.0", "--port=7860"]
